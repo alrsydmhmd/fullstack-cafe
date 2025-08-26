@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Header from "./components/Header";
 import About from "./components/About";
-import Menu from "./components/Menu";
+// import Menu from "./components/Menu";
 import Footer from "./components/Footer";
 import Contact from "./components/Contact";
 
@@ -30,7 +30,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               <Navbar />
               <Header />
               <About />
-              <Menu />
+              {/* <Menu /> */}
               <Contact />
               <Footer />
             </>
