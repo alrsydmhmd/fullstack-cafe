@@ -1,18 +1,30 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (email === "admin@cafe.com" && password === "123456") {
+    setError(""); // Reset error message
+
+    // Ambil data pengguna dari localStorage
+    const userData = JSON.parse(localStorage.getItem("userData"));
+
+    // Validasi input
+    if (!email || !password) {
+      setError("Email and password are required.");
+      return;
+    }
+
+    // Cek apakah email dan password cocok
+    if (userData && userData.email === email && userData.password === password) {
       localStorage.setItem("isAuthenticated", "true");
-      navigate("/admin/dashboard");
+      alert(`Welcome back, ${userData.username}!`);
+      window.location.href = "/admin/dashboard"; // Redirect to dashboard
     } else {
-      alert("Email atau password salah!");
+      setError("Invalid email or password.");
     }
   };
 
@@ -20,6 +32,7 @@ export default function Login() {
     <section className="min-h-screen flex items-center justify-center bg-gray-900">
       <div className="bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-md">
         <h1 className="text-2xl font-bold text-white mb-6">Admin Login</h1>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"

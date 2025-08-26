@@ -9,6 +9,7 @@ import Header from "./components/Header";
 import About from "./components/About";
 import Menu from "./components/Menu";
 import Footer from "./components/Footer";
+import Contact from "./components/Contact";
 
 // Pages
 import Login from "./pages/Login.jsx";
@@ -30,6 +31,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               <Header />
               <About />
               <Menu />
+              <Contact />
               <Footer />
             </>
           }
