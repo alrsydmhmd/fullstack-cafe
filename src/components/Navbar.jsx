@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiMenu, FiX, FiCoffee } from "react-icons/fi";
-// src/components/Navbar.jsx
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,22 +10,41 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center text-white">
-            <FiCoffee size={32} className="mr-2" />
-            <span className="text-xl font-mono">FullStack Café</span>
+          <div className="flex items-center text-white font-bold">
+            <FiCoffee size={28} className="mr-2" />
+            FullStack Café
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8">
-            <a href="#home" className="text-gray-300 hover:text-white font-medium">Home</a>
-            <a href="/menu" className="text-gray-300 hover:text-white font-medium">Full Menu</a>
-            <a href="#about" className="text-gray-300 hover:text-white font-medium">Our Story</a>
-            <a href="#" className="text-gray-300 hover:text-white font-medium">Career</a>
+          <div className="hidden md:flex space-x-6 items-center">
+            <a href="#home" className="text-white hover:text-yellow-400">Home</a>
+            <a href="#about" className="text-white hover:text-yellow-400">About</a>
+            <a href="#menu" className="text-white hover:text-yellow-400">Menu</a>
+            <a href="#contact" className="text-white hover:text-yellow-400">Contact</a>
+
+            {/* Admin Buttons */}
+            <div className="flex space-x-3 ml-6">
+              <Link
+                to="/admin/login"
+                className="text-white px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600"
+              >
+                Login
+              </Link>
+              <Link
+                to="/admin/signup"
+                className="px-4 py-2 rounded-lg bg-yellow-500 font-semibold hover:bg-yellow-400"
+              >
+                Sign Up
+              </Link>
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-300 focus:outline-none">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-white focus:outline-none"
+            >
               {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
             </button>
           </div>
@@ -35,10 +54,16 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-gray-800 shadow-md">
-          <a href="#home" className="block px-4 py-2 text-gray-300 hover:bg-gray-700">Home</a>
-          <a href="/menu" className="block px-4 py-2 text-gray-300 hover:bg-gray-700">Full Menu</a>
-          <a href="#about" className="block px-4 py-2 text-gray-300 hover:bg-gray-700">Our Story</a>
-          <a href="/order" className="text-gray-300 hover:text-white font-medium">Career</a>
+          <a href="#home" className="block px-4 py-2 text-white hover:bg-gray-700">Home</a>
+          <a href="#about" className="block px-4 py-2 text-white hover:bg-gray-700">About</a>
+          <a href="#menu" className="block px-4 py-2 text-white hover:bg-gray-700">Menu</a>
+          <a href="#contact" className="block px-4 py-2 text-white hover:bg-gray-700">Contact</a>
+          <Link to="/admin/login" className="block px-4 py-2 text-white hover:bg-gray-700">
+            Login
+          </Link>
+          <Link to="/admin/signup" className="block px-4 py-2 hover:bg-gray-700">
+            Sign Up
+          </Link>
         </div>
       )}
     </nav>

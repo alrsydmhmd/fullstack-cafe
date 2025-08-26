@@ -8,4 +8,7 @@ export default defineConfig({
     react(), 
     tailwindcss()
   ],
+  server: {
+    historyApiFallback: true, // ✅ biar router jalan di semua route
+  },
 })
