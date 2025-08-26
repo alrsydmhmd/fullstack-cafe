@@ -1,12 +1,21 @@
-import Latte from "../assets/CafeLatte.jpg";
+import Latte from "../assets/CaffeLatte.jpg";
+import Espresso from "../assets/Espresso.jpg"
+import Croissant from "../assets/Croissant.jpg"
+import Mocktail from "../assets/Mocktail.jpg"
+import Sushi from "../assets/Sushi.jpg"
+import Burger from "../assets/Burger.jpg"
+import { useCart } from "../context/CartContext";
+
+
 // src/pages/FullMenu.jsx
 export default function FullMenu() {
+  const { addToCart } = useCart();
   const menuItems = [
     {
       name: "Espresso",
-      price: "25K",
+      price: "50K",
       desc: "Strong and bold single shot coffee.",
-      img: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=500"
+      img: Espresso
     },
     {
       name: "Caffe Latte",
@@ -15,28 +24,28 @@ export default function FullMenu() {
       img: Latte
     },
     {
-      name: "Latte",
-      price: "35K",
-      desc: "Smooth espresso with creamy milk.",
-      img: "https://images.unsplash.com/photo-1541167760496-1628856ab772?w=500"
-    },
-    {
-      name: "Mocha",
-      price: "40K",
-      desc: "Espresso, chocolate, and steamed milk.",
-      img: "https://images.unsplash.com/photo-1523942839745-7848d4d2d23b?w=500"
-    },
-    {
-      name: "Cold Brew",
+      name: "Croissant",
       price: "30K",
-      desc: "Brewed for 12 hours, smooth and rich.",
-      img: "https://images.unsplash.com/photo-1561882468-9110e03e0f78?w=500"
+      desc: "Famous cookies from France",
+      img: Croissant
     },
     {
-      name: "Caramel Macchiato",
-      price: "38K",
-      desc: "Espresso, vanilla syrup, caramel drizzle.",
-      img: "https://images.unsplash.com/photo-1534778101976-62847782c213?w=500"
+      name: "Strawberry Mocktail",
+      price: "35K",
+      desc: "The ideal drink for a warm summer day.",
+      img: Mocktail
+    },
+    {
+      name: "Sushi",
+      price: "50K",
+      desc: "A Japanese dish consisting primarily of vinegared rice (shari) combined with various other ingredients such as raw or cooked fish, seafood, meat, or vegetables (neta).",
+      img: Sushi
+    },
+    {
+      name: "Burger King",
+      price: "50",
+      desc: "a type of sandwich consisting of a round slice of bread filled with a grilled meat (usually beef) patty",
+      img: Burger 
     }
   ];
 
@@ -58,12 +67,18 @@ export default function FullMenu() {
               <img
                 src={item.img}
                 alt={item.name}
-                className="w-full h-65 object-cover"
+                className="w-full h-[260px] object-cover"
               />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-[#f1e0c5]">{item.name}</h2>
                 <p className="text-[#d7b899] font-medium mb-2">{item.price}</p>
                 <p className="text-gray-300 text-sm">{item.desc}</p>
+                <button
+                onClick={() => addToCart(item)}
+                className="mt-2 bg-[#d7b899] text-[#2e1c15] px-4 py-2 rounded hover:bg-[#c8a97e] font-semibold"
+                >
+                  Add to Cart
+                </button>
               </div>
             </div>
           ))}
