@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Header from "./components/Header";
 import About from "./components/About";
-// import Menu from "./components/Menu";
+import Menu from "./components/Menu.jsx";
 import Footer from "./components/Footer";
 import Contact from "./components/Contact";
 
@@ -15,6 +15,7 @@ import Contact from "./components/Contact";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import FullMenu from "./pages/FullMenu.jsx";
 
 import "./index.css";
 
@@ -30,7 +31,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               <Navbar />
               <Header />
               <About />
-              {/* <Menu /> */}
+              <Menu />
               <Contact />
               <Footer />
             </>
@@ -41,6 +42,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/admin/login" element={<Login />} />
         <Route path="/admin/signup" element={<Signup />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/order" element={<FullMenu />} />
 
         {/* 404 */}
         <Route

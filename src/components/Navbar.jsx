@@ -56,7 +56,7 @@ export default function Navbar() {
         <div className="md:hidden bg-gray-800 shadow-md">
           <a href="#home" className="block px-4 py-2 text-white hover:bg-gray-700">Home</a>
           <a href="#about" className="block px-4 py-2 text-white hover:bg-gray-700">About</a>
-          <a href="#menu" className="block px-4 py-2 text-white hover:bg-gray-700">Menu</a>
+          <a href="/menu" className="block px-4 py-2 text-white hover:bg-gray-700">Menu</a>
           <a href="#contact" className="block px-4 py-2 text-white hover:bg-gray-700">Contact</a>
           <Link to="/admin/login" className="block px-4 py-2 text-white hover:bg-gray-700">
             Login

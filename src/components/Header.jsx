@@ -1,4 +1,5 @@
 import Background from '../assets/background.jpg';
+import { Link } from 'react-router-dom';
 
 // src/components/Header.jsx
 export default function Header() {
@@ -19,12 +20,12 @@ export default function Header() {
           Welcome to FullStack Café
         </h1>
         <p className="text-lg md:text-xl mb-8">"Here, Java means more than just a programming language — it’s a cup of happiness."</p>
-        <a
-          href="/order"
+        <Link
+          to="/order"
           className="bg-yellow-500 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-yellow-400 transition duration-300"
         >
           Order Now
-        </a>
+        </Link>
       </div>
     </section>
   );
