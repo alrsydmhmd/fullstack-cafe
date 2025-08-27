@@ -21,33 +21,42 @@ export default function FullMenu() {
   ];
 
   const handleAdd = (item) => {
+    // Tambah ke keranjang
     addToCart(item);
 
+    // Simpan transaksi ke salesHistory
     const salesHistory = JSON.parse(localStorage.getItem("salesHistory")) || [];
     salesHistory.push({
       date: new Date().toISOString(),
       name: item.name,
       price: item.price,
+      quantity: 1
     });
     localStorage.setItem("salesHistory", JSON.stringify(salesHistory));
 
-    const updatedCart = [...cart, item];
+    // Update cart di localStorage
+    const updatedCart = [...cart];
+    const existingItem = updatedCart.find(c => c.name === item.name);
+    if (existingItem) {
+      existingItem.quantity = (existingItem.quantity || 1) + 1;
+    } else {
+      updatedCart.push({ ...item, quantity: 1 });
+    }
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-[#3e2723] to-[#4e342e] text-white py-12 px-6">
-      
-      {/* Keranjang Kuning */}
+      {/* Keranjang */}
       <div
         id="cart-icon"
-        className="fixed top-4 right-4 bg-yellow-400 text-black p-3 rounded-full shadow-lg cursor-pointer"
+        className="fixed top-4 right-4 bg-yellow-400 text-black p-3 rounded-full shadow-lg cursor-pointer hover:scale-110 transition-transform"
         onClick={() => navigate("/cart")}
       >
         🛒
         {cart.length > 0 && (
           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-            {cart.length}
+            {cart.reduce((sum, item) => sum + (item.quantity || 1), 0)}
           </span>
         )}
       </div>
@@ -81,9 +90,7 @@ export default function FullMenu() {
                 className="w-full h-[260px] object-cover"
               />
               <div className="p-6">
-                <h2 className="text-xl font-semibold text-[#f1e0c5]">
-                  {item.name}
-                </h2>
+                <h2 className="text-xl font-semibold text-[#f1e0c5]">{item.name}</h2>
                 <p className="text-[#d7b899] font-medium mb-2">
                   {item.price.toLocaleString("en-US", {
                     style: "currency",

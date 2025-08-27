@@ -1,7 +1,7 @@
+// src/pages/Dashboard.jsx
 import { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar"; // pakai sidebar ungu yang baru
-import DashboardHeader from "../components/DashboardHeader"; 
-
+import Sidebar from "../components/Sidebar";
+import DashboardHeader from "../components/DashboardHeader";
 import {
   LineChart,
   Line,
@@ -16,14 +16,21 @@ import {
 } from "recharts";
 
 export default function Dashboard() {
-  const [userData, setUserData] = useState(null);
   const [salesData, setSalesData] = useState([]);
+  const [totalSales, setTotalSales] = useState(0);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const [pageViews, setPageViews] = useState(0);
+  const [downloads, setDownloads] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [activeUsers, setActiveUsers] = useState([]);
 
   const loadSalesData = () => {
     const salesHistory = JSON.parse(localStorage.getItem("salesHistory")) || [];
 
     const grouped = {};
+    let salesSum = 0;
+    let ordersCount = 0;
+
     salesHistory.forEach((sale) => {
       const month = new Date(sale.date).toLocaleString("default", {
         month: "short",
@@ -33,8 +40,13 @@ export default function Dashboard() {
       }
       grouped[month].sales += sale.price;
       grouped[month].orders += 1;
+
+      salesSum += sale.price;
+      ordersCount += 1;
     });
 
+    setTotalSales(salesSum);
+    setTotalOrders(ordersCount);
     setSalesData(Object.values(grouped));
     setLoading(false);
   };
@@ -45,7 +57,13 @@ export default function Dashboard() {
       window.location.href = "/login";
       return;
     }
-    setUserData(data);
+
+    setPageViews(parseInt(localStorage.getItem("pageViews") || 0));
+    setDownloads(parseInt(localStorage.getItem("downloads") || 0));
+
+    // Ambil data pegawai dari localStorage
+    const storedUsers = JSON.parse(localStorage.getItem("activeUsers")) || [];
+    setActiveUsers(storedUsers);
 
     loadSalesData();
   }, []);
@@ -54,19 +72,27 @@ export default function Dashboard() {
     if (window.confirm("Yakin ingin menghapus semua data penjualan?")) {
       localStorage.removeItem("salesHistory");
       setSalesData([]);
+      setTotalSales(0);
+      setTotalOrders(0);
+    }
+  };
+
+  const handleDeleteUser = (id) => {
+    if (window.confirm("Hapus pegawai ini?")) {
+      const updatedUsers = activeUsers.filter((user) => user.id !== id);
+      setActiveUsers(updatedUsers);
+      localStorage.setItem("activeUsers", JSON.stringify(updatedUsers));
     }
   };
 
   return (
     <div className="flex min-h-screen bg-gray-900">
-      {/* Sidebar Ungu */}
       <Sidebar />
 
-      {/* Konten Dashboard */}
       <section className="flex-1 p-6">
         <DashboardHeader />
+
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-white">Dashboard</h1>
           <button
             onClick={handleResetSales}
             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
@@ -75,61 +101,111 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {userData && (
-          <div className="text-white mb-6">
-            <p className="font-semibold">Welcome, {userData.username}!</p>
-            <p>Email: {userData.email}</p>
+        {/* Top Cards */}
+        <div className="grid gap-6 md:grid-cols-4 mb-6">
+          <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
+            <p className="text-orange-400 text-xl font-bold">
+              ${totalSales.toLocaleString()}
+            </p>
+            <p className="text-gray-300">All Earnings</p>
           </div>
-        )}
+          <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
+            <p className="text-green-400 text-xl font-bold">{pageViews}+</p>
+            <p className="text-gray-300">Page Views</p>
+          </div>
+          <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
+            <p className="text-red-400 text-xl font-bold">{totalOrders}</p>
+            <p className="text-gray-300">Task Completed</p>
+          </div>
+          <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
+            <p className="text-cyan-400 text-xl font-bold">{downloads}</p>
+            <p className="text-gray-300">Downloads</p>
+          </div>
+        </div>
 
         {loading ? (
           <div className="text-white text-center py-20">Loading charts...</div>
         ) : (
-          <div className="grid gap-6 lg:grid-cols-2 ">
-            {/* Line Chart */}
-            <div className="bg-gray-800 p-6 rounded-xl shadow-lg">
-              <h2 className="text-lg text-white mb-4">Sales Overview</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={salesData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
-                  <XAxis dataKey="month" stroke="#D1D5DB" />
-                  <YAxis stroke="#D1D5DB" />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="sales"
-                    stroke="#82ca9d"
-                    strokeWidth={2}
-                    animationDuration={800}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="orders"
-                    stroke="#8884d8"
-                    strokeWidth={2}
-                    animationDuration={800}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+          <>
+            {/* Charts */}
+            <div className="grid gap-6 lg:grid-cols-3 mb-6">
+              <div className="bg-gray-800 p-6 rounded-lg shadow-lg lg:col-span-2">
+                <h2 className="text-lg text-white mb-4">Visitors</h2>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={salesData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
+                    <XAxis dataKey="month" stroke="#D1D5DB" />
+                    <YAxis stroke="#D1D5DB" />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="sales" stroke="#82ca9d" />
+                    <Line type="monotone" dataKey="orders" stroke="#8884d8" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h2 className="text-lg text-white mb-4">Orders Breakdown</h2>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={salesData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
+                    <XAxis dataKey="month" stroke="#D1D5DB" />
+                    <YAxis stroke="#D1D5DB" />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="orders" fill="#8884d8" />
+                    <Bar dataKey="sales" fill="#82ca9d" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
 
-            {/* Bar Chart */}
-            <div className="bg-gray-800 p-6 rounded-xl shadow-lg">
-              <h2 className="text-lg text-white mb-4">Orders Breakdown</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={salesData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
-                  <XAxis dataKey="month" stroke="#D1D5DB" />
-                  <YAxis stroke="#D1D5DB" />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="orders" fill="#8884d8" animationDuration={800} />
-                  <Bar dataKey="sales" fill="#82ca9d" animationDuration={800} />
-                </BarChart>
-              </ResponsiveContainer>
+            {/* Active Employees Table */}
+            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+              <h2 className="text-lg text-white mb-4">Active Employees</h2>
+              <table className="w-full text-gray-300 mb-4">
+                <thead>
+                  <tr className="bg-gray-700">
+                    <th className="text-left py-2 px-3">Nama</th>
+                    <th className="text-left py-2 px-3">Jabatan</th>
+                    <th className="text-left py-2 px-3">Jam Masuk</th>
+                    <th className="text-left py-2 px-3">Jam Keluar</th>
+                    <th className="text-left py-2 px-3">Lembur</th>
+                    <th className="text-left py-2 px-3">Cuti</th>
+                    <th className="text-left py-2 px-3">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {activeUsers.length > 0 ? (
+                    activeUsers.map((emp) => (
+                      <tr key={emp.id} className="border-b border-gray-700">
+                        <td className="py-2 px-3">{emp.name}</td>
+                        <td className="py-2 px-3">{emp.role}</td>
+                        <td className="py-2 px-3">{emp.jamMasuk || "-"}</td>
+                        <td className="py-2 px-3">{emp.jamKeluar || "-"}</td>
+                        <td className="py-2 px-3">{emp.lembur || "-"}</td>
+                        <td className="py-2 px-3">{emp.cuti || "-"}</td>
+                        <td className="py-2 px-3">
+                          <button
+                            onClick={() => handleDeleteUser(emp.id)}
+                            className="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded"
+                          >
+                            Hapus
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="7" className="text-center py-4">
+                        Tidak ada pegawai aktif.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
-          </div>
+          </>
         )}
       </section>
     </div>

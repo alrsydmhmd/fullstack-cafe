@@ -1,38 +1,60 @@
-import { BellIcon, MagnifyingGlassIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
-import { FiCoffee } from "react-icons/fi";
+import { useState, useEffect } from "react";
+import {
+  BellIcon,
+  ChatBubbleOvalLeftIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import Gua from "../assets/gua.jpg";
 
 export default function DashboardHeader() {
-  return (
-    <header className="flex items-center justify-between bg-gray-900 px-4 py-3 border-b border-gray-800">
-      {/* Logo kiri */}
-      <div className="flex items-center">
-        <FiCoffee className="w-8 h-8 text-indigo-500" />
-      </div>
+  const [userData, setUserData] = useState(null);
 
-      {/* Search */}
-      <div className="flex items-center flex-1 max-w-md mx-4">
-        <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 mr-2" />
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("userData"));
+    setUserData(data);
+  }, []);
+
+  return (
+    <header className="flex flex-col sm:flex-row justify-between items-center bg-gray-800 p-4 rounded-lg mb-6 shadow-lg gap-4">
+      {/* Search Bar */}
+      <div className="flex items-center bg-gray-700 px-3 py-2 rounded-lg w-full sm:w-auto sm:flex-1">
+        <MagnifyingGlassIcon className="w-5 h-5 text-gray-400" />
         <input
           type="text"
           placeholder="Search"
-          className="bg-gray-800 text-white px-3 py-2 rounded-md w-full
-                     focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="bg-transparent outline-none text-gray-200 px-2 w-full"
         />
       </div>
 
-      {/* Right: bell + profile */}
+      {/* Right Icons & Profile */}
       <div className="flex items-center gap-4">
-        <BellIcon className="w-6 h-6 text-gray-300 hover:text-white cursor-pointer" />
-        <div className="flex items-center gap-2">
-          <img
-            className="w-8 h-8 rounded-full"
-            src={Gua}
-            alt="User avatar"
-          />
-          <span className="text-white font-semibold">Muhamad Zamzam Alrasyd</span>
-          <ChevronDownIcon className="w-4 h-4 text-gray-300" />
+        {/* Notifications */}
+        <div className="relative cursor-pointer">
+          <BellIcon className="w-6 h-6 text-gray-300 hover:text-white" />
+          <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+            5
+          </span>
         </div>
+
+        {/* Messages */}
+        <div className="relative cursor-pointer">
+          <ChatBubbleOvalLeftIcon className="w-6 h-6 text-gray-300 hover:text-white" />
+          <span className="absolute -top-1 -right-2 bg-green-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+            3
+          </span>
+        </div>
+
+        {/* Profile */}
+        {userData && (
+          <div className="flex items-center gap-2 cursor-pointer">
+            <img
+              src={Gua}
+              alt="User"
+              className="w-8 h-8 rounded-full border border-gray-500"
+            />
+            <span className="text-white font-semibold">{userData.username}</span>
+          </div>
+        )}
       </div>
     </header>
   );
