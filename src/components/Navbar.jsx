@@ -32,7 +32,7 @@ export default function Navbar() {
               </Link>
               <Link
                 to="/admin/signup"
-                className="px-4 py-2 rounded-lg bg-yellow-500 font-semibold hover:bg-yellow-400"
+                className="text-white px-4 py-2 rounded-lg bg-yellow-500 font-semibold hover:bg-yellow-400"
               >
                 Sign Up
               </Link>
@@ -61,7 +61,7 @@ export default function Navbar() {
           <Link to="/admin/login" className="block px-4 py-2 text-white hover:bg-gray-700">
             Login
           </Link>
-          <Link to="/admin/signup" className="block px-4 py-2 hover:bg-gray-700">
+          <Link to="/admin/signup" className="block px-4 py-2 text-white hover:bg-gray-700">
             Sign Up
           </Link>
         </div>

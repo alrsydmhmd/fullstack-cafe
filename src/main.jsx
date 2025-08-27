@@ -2,7 +2,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { CartProvider } from "./context/CartContext";
+import { CartProvider } from "./context/CartProvider.jsx"; // ⬅️ Tambah import provider
+import Cart from "./pages/Cart.jsx";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -17,13 +18,12 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import FullMenu from "./pages/FullMenu.jsx";
-import Cart from "./pages/Cart.jsx";
 
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <CartProvider>
+    <CartProvider> {/* ⬅️ Bungkus semua route */}
       <Router>
         <Routes>
           {/* Halaman Utama */}
@@ -45,8 +45,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/admin/login" element={<Login />} />
           <Route path="/admin/signup" element={<Signup />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/order" element={<FullMenu />} />
           <Route path="/cart" element={<Cart />} />
-            <Route path="/order" element={<FullMenu />} />
 
           {/* 404 */}
           <Route
@@ -56,7 +56,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 Page Not Found
               </h1>
             }
-            />
+          />
         </Routes>
       </Router>
     </CartProvider>
