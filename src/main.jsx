@@ -13,7 +13,6 @@ import Menu from "./components/Menu.jsx";
 import Footer from "./components/Footer";
 import Contact from "./components/Contact";
 import Profile from "./pages/Profile.jsx";
-import Calendar from "./pages/Calender.jsx";
 import Documents from "./pages/Documents.jsx";
 import Transaksi from "./pages/Transaksi.jsx";
 import Payment from "./pages/Payments.jsx";
@@ -38,8 +37,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
               <>
                 <Navbar />
                 <Header />
-                <About />
                 <Menu />
+                <About />
                 <Contact />
                 <Footer />
               </>
@@ -53,7 +52,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/order" element={<FullMenu />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/admin/profile" element={<Profile />} />
-          <Route path="/admin/calendar" element={<Calendar />} />
           <Route path="/admin/documents" element={<Documents />} />
           <Route path="/admin/transaksi" element={<Transaksi />} />
           <Route path="/admin/payment" element={<Payment />} />

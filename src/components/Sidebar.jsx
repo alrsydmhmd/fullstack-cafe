@@ -55,27 +55,6 @@ export default function Sidebar() {
           <ArrowRightCircleIcon className="w-5 h-5" />
           Transaksi
         </Link>
-        <Link
-          to="/admin/calendar"
-          className="flex items-center gap-3 px-3 py-2 rounded-md text-indigo-100 hover:bg-sky-600"
-        >
-          <CalendarIcon className="w-5 h-5" />
-          Calendar
-        </Link>
-        <Link
-          to="/admin/documents"
-          className="flex items-center gap-3 px-3 py-2 rounded-md text-indigo-100 hover:bg-sky-600"
-        >
-          <DocumentIcon className="w-5 h-5" />
-          Documents
-        </Link>
-        <Link
-          to="/admin/reports"
-          className="flex items-center gap-3 px-3 py-2 rounded-md text-indigo-100 hover:bg-sky-600"
-        >
-          <ChartBarIcon className="w-5 h-5" />
-          Reports
-        </Link>
       </nav>
 
       {/* Tombol Settings */}

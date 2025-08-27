@@ -2,33 +2,33 @@
 const menuItems = [
   {
     name: "Espresso",
-    description: "Rich and bold espresso shot.",
-    price: "$3.00",
+    description: "Strong and bold single shot coffee.",
+    price: "$50.00",
   },
   {
-    name: "Cappuccino",
+    name: "Caffe Latte",
     description: "Espresso with steamed milk and foam.",
-    price: "$4.00",
+    price: "$35.00",
   },
   {
-    name: "Latte",
-    description: "Espresso with steamed milk and a light layer of foam.",
-    price: "$4.50",
-  },
-  {
-    name: "Mocha",
-    description: "Espresso with steamed milk, chocolate syrup, and whipped cream.",
-    price: "$5.00",
+    name: "Strawberry Mocktail",
+    description: "The ideal drink for a warm summer day.",
+    price: "$35.00",
   },
   {
     name: "Croissant",
-    description: "Flaky and buttery pastry.",
-    price: "$2.50",
+    description: "Famous cookies from France.",
+    price: "$30.00",
   },
   {
-    name: "Chocolate Chip Cookie",
-    description: "Freshly baked cookie with chocolate chips.",
-    price: "$1.50",
+    name: "Sushi",
+    description: "A Japanese dish with vinegared rice and various toppings.",
+    price: "$50.00",
+  },
+  {
+    name: "Burger King",
+    description: "A sandwich with grilled beef patty in a bun.",
+    price: "$50.00",
   },
 ];
 

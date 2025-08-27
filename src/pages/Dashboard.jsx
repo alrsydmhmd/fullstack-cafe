@@ -107,19 +107,19 @@ export default function Dashboard() {
             <p className="text-orange-400 text-xl font-bold">
               ${totalSales.toLocaleString()}
             </p>
-            <p className="text-gray-300">All Earnings</p>
+            <p className="text-gray-300">Total Perhari</p>
           </div>
           <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
             <p className="text-green-400 text-xl font-bold">{pageViews}+</p>
-            <p className="text-gray-300">Page Views</p>
+            <p className="text-gray-300">Pemasukan Perbulan</p>
           </div>
           <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
             <p className="text-red-400 text-xl font-bold">{totalOrders}</p>
-            <p className="text-gray-300">Task Completed</p>
+            <p className="text-gray-300">Pengeluaran Perbulan</p>
           </div>
           <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
             <p className="text-cyan-400 text-xl font-bold">{downloads}</p>
-            <p className="text-gray-300">Downloads</p>
+            <p className="text-gray-300">Omset</p>
           </div>
         </div>
 
@@ -162,7 +162,7 @@ export default function Dashboard() {
 
             {/* Active Employees Table */}
             <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-              <h2 className="text-lg text-white mb-4">Active Employees</h2>
+              <h2 className="text-lg text-white mb-4">Pegawai</h2>
               <table className="w-full text-gray-300 mb-4">
                 <thead>
                   <tr className="bg-gray-700">

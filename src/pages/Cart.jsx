@@ -1,8 +1,21 @@
+import { useEffect, useState } from "react";
 import { useCart } from "../context/UseCart";
 import { Link } from "react-router-dom";
 
 export default function Cart() {
-  const { cart, removeFromCart, clearCart } = useCart();
+  const [cart, setCart] = useState([]);
+
+  const fetchCart = async () => {
+    const res = await fetch("/api/cart");
+    const data = await res.json();
+    setCart(data);
+  };
+
+  useEffect(() => {
+    fetchCart();
+  }, []);
+  
+  const { removeFromCart, clearCart } = useCart();
 
   const total = cart.reduce((sum, item) => sum + item.price, 0);
 
@@ -42,7 +55,10 @@ export default function Cart() {
                         {item.name}
                       </h2>
                       <p className="text-sm text-[#d7b899]">
-                        {item.price.toLocaleString("id-ID")} IDR
+                        {item.price.toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                        })}
                       </p>
                     </div>
                   </div>
@@ -59,7 +75,7 @@ export default function Cart() {
             {/* Total, Clear Cart & Continue Shopping */}
             <div className="mt-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
               <h2 className="text-2xl font-bold text-[#f1e0c5]">
-                Total: {total.toLocaleString("id-ID")} IDR
+                Total: {total.toLocaleString("en-US", { style: "currency", currency: "USD" })}
               </h2>
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
