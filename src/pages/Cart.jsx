@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useCart } from "../context/UseCart";
 import { Link } from "react-router-dom";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
 
+  // Ambil data cart dari backend
   const fetchCart = async () => {
     const res = await fetch("http://localhost:5000/api/cart");
     const data = await res.json();
@@ -14,10 +14,25 @@ export default function Cart() {
   useEffect(() => {
     fetchCart();
   }, []);
-  
-  const { removeFromCart, clearCart } = useCart();
 
-  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  // Hapus item per id
+  const removeFromCart = async (id) => {
+    await fetch(`http://localhost:5000/api/cart/${id}`, { method: "DELETE" });
+    fetchCart(); // refresh cart
+  };
+
+  // Hapus semua item
+  const clearCart = async () => {
+    await Promise.all(
+      cart.map((item) =>
+        fetch(`http://localhost:5000/api/cart/${item.id}`, { method: "DELETE" })
+      )
+    );
+    setCart([]);
+  };
+
+  // Hitung total harga
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#3e2723] to-[#4e342e] text-white py-12 px-6">
@@ -39,9 +54,9 @@ export default function Cart() {
         ) : (
           <>
             <div className="bg-[#2e1c15] rounded-xl shadow-lg border border-[#d7b899] p-4">
-              {cart.map((item, index) => (
+              {cart.map((item) => (
                 <div
-                  key={index}
+                  key={item.id}
                   className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-[#d7b899] py-4"
                 >
                   <div className="flex items-center gap-4">
@@ -56,14 +71,15 @@ export default function Cart() {
                       </h2>
                       <p className="text-sm text-[#d7b899]">
                         {item.price.toLocaleString("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                        })}
+                          style: "currency",
+                          currency: "USD",
+                        })}{" "}
+                        × {item.quantity}
                       </p>
                     </div>
                   </div>
                   <button
-                    onClick={() => removeFromCart(index)}
+                    onClick={() => removeFromCart(item.id)}
                     className="mt-3 sm:mt-0 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
                   >
                     Hapus
@@ -75,7 +91,11 @@ export default function Cart() {
             {/* Total, Clear Cart & Continue Shopping */}
             <div className="mt-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
               <h2 className="text-2xl font-bold text-[#f1e0c5]">
-                Total: {total.toLocaleString("en-US", { style: "currency", currency: "USD" })}
+                Total:{" "}
+                {total.toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                })}
               </h2>
               <div className="flex flex-col sm:flex-row gap-3">
                 <button

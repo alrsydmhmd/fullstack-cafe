@@ -4,13 +4,51 @@ import Croissant from "../assets/Croissant.jpg";
 import Mocktail from "../assets/Mocktail.jpg";
 import Sushi from "../assets/Sushi.jpg";
 import Burger from "../assets/Burger.jpg";
-import { useCart } from "../context/UseCart"; 
+import { useCart } from "../context/UseCart";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function FullMenu() {
   const { cart, addToCart } = useCart();
   const navigate = useNavigate();
 
+  // Fungsi tambah ke keranjang + simpan ke DB
+  const handleAdd = async (item) => {
+    try {
+      // Simpan ke database lewat backend
+      const res = await fetch("http://localhost:5000/api/cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: item.name,
+          price: item.price,
+          quantity: 1,
+          img: item.img
+        })
+      });
+
+      if (!res.ok) throw new Error("Gagal menambahkan ke cart");
+
+      const data = await res.json();
+
+      // Update state keranjang di frontend
+      addToCart(data);
+
+      // Simpan riwayat transaksi di localStorage (opsional)
+      const salesHistory = JSON.parse(localStorage.getItem("salesHistory")) || [];
+      salesHistory.push({
+        date: new Date().toISOString(),
+        name: item.name,
+        price: item.price,
+        quantity: 1
+      });
+      localStorage.setItem("salesHistory", JSON.stringify(salesHistory));
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Data menu
   const menuItems = [
     { name: "Espresso", price: 50, desc: "Strong and bold single shot coffee.", img: Espresso },
     { name: "Caffe Latte", price: 35, desc: "Espresso with steamed milk & foam.", img: Latte },
@@ -19,31 +57,6 @@ export default function FullMenu() {
     { name: "Sushi", price: 50, desc: "A Japanese dish with vinegared rice and various toppings.", img: Sushi },
     { name: "Burger King", price: 50, desc: "A sandwich with grilled beef patty in a bun.", img: Burger },
   ];
-
-  const handleAdd = (item) => {
-    // Tambah ke keranjang
-    addToCart(item);
-
-    // Simpan transaksi ke salesHistory
-    const salesHistory = JSON.parse(localStorage.getItem("salesHistory")) || [];
-    salesHistory.push({
-      date: new Date().toISOString(),
-      name: item.name,
-      price: item.price,
-      quantity: 1
-    });
-    localStorage.setItem("salesHistory", JSON.stringify(salesHistory));
-
-    // Update cart di localStorage
-    const updatedCart = [...cart];
-    const existingItem = updatedCart.find(c => c.name === item.name);
-    if (existingItem) {
-      existingItem.quantity = (existingItem.quantity || 1) + 1;
-    } else {
-      updatedCart.push({ ...item, quantity: 1 });
-    }
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-  };
 
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-[#3e2723] to-[#4e342e] text-white py-12 px-6">

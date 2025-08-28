@@ -5,26 +5,38 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Reset error message
+    setError("");
 
-    // Ambil data pengguna dari localStorage
-    const userData = JSON.parse(localStorage.getItem("userData"));
-
-    // Validasi input
     if (!email || !password) {
       setError("Email and password are required.");
       return;
     }
 
-    // Cek apakah email dan password cocok
-    if (userData && userData.email === email && userData.password === password) {
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Login failed");
+        return;
+      }
+
+      // Simpan user dan status login
+      localStorage.setItem("userData", JSON.stringify(data.user));
       localStorage.setItem("isAuthenticated", "true");
-      alert(`Welcome back, ${userData.username}!`);
-      window.location.href = "/admin/dashboard"; // Redirect to dashboard
-    } else {
-      setError("Invalid email or password.");
+
+      alert(`Welcome back, ${data.user.username}!`);
+      window.location.href = "/admin/dashboard";
+    } catch (err) {
+      console.error(err);
+      setError("Server error. Please try again later.");
     }
   };
 

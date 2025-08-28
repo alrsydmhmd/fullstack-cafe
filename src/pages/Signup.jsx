@@ -6,12 +6,13 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmpassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Reset error message
+    setError("");
+    setSuccess("");
 
-    // Validasi input
     if (!email || !username || !password || !confirmpassword) {
       setError("All fields are required.");
       return;
@@ -22,17 +23,29 @@ export default function Signup() {
       return;
     }
 
-    // Simpan data ke localStorage
-    const userData = {
-      email,
-      username,
-      password, // Simpan password dengan hati-hati
-    };
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, username, password }),
+      });
 
-    localStorage.setItem("userData", JSON.stringify(userData));
-    localStorage.setItem("isAuthenticated", "true");
-    alert(`Admin account created: ${email}`);
-    window.location.href = "/admin/dashboard";
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Signup failed");
+        return;
+      }
+
+      setSuccess("Account created successfully! Redirecting to login...");
+      setTimeout(() => {
+        window.location.href = "/admin/login";
+      }, 1500);
+
+    } catch (err) {
+      console.error(err);
+      setError("Server error. Please try again later.");
+    }
   };
 
   return (
@@ -40,6 +53,7 @@ export default function Signup() {
       <div className="bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-md">
         <h1 className="text-2xl font-bold text-white mb-6">Admin Sign Up</h1>
         {error && <p className="text-red-500 mb-4">{error}</p>}
+        {success && <p className="text-green-500 mb-4">{success}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
@@ -80,4 +94,3 @@ export default function Signup() {
     </section>
   );
 }
-

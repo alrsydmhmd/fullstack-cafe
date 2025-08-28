@@ -12,6 +12,7 @@ import {
   ArrowRightCircleIcon,
 } from "@heroicons/react/24/outline";
 import { FiCoffee } from "react-icons/fi";
+import { FaUser } from "react-icons/fa";
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -38,15 +39,15 @@ export default function Sidebar() {
           to="/admin/dashboard"
           className="flex items-center gap-3 px-3 py-2 rounded-md text-white hover:bg-sky-600"
         >
-          <HomeIcon className="w-5 h-5" />
+          <HomeIcon className="w-6 h-6" />
           Dashboard
         </Link>
         <Link
           to="/admin/profile"
           className="flex items-center gap-3 px-3 py-2 rounded-md text-indigo-100 hover:bg-sky-600"
         >
-          <UsersIcon className="w-5 h-5" />
-          Profile
+          <FaUser className="w-5 h-5" />
+          Pegawai
         </Link>
         <Link
           to="/admin/transaksi"
@@ -54,6 +55,13 @@ export default function Sidebar() {
         >
           <ArrowRightCircleIcon className="w-5 h-5" />
           Transaksi
+        </Link>
+        <Link
+          to="/admin/account"
+          className="flex items-center gap-3 px-3 py-2 rounded-md text-indigo-100 hover:bg-sky-600"
+        >
+          <FaUser className="w-5 h-5" />
+          Account
         </Link>
       </nav>
 
