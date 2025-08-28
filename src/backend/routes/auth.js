@@ -90,5 +90,22 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// DELETE akun
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [result] = await db.query("DELETE FROM admins WHERE id = ?", [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: "Akun tidak ditemukan" });
+    }
+
+    res.json({ success: true, message: "Akun berhasil dihapus" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 
 export default router;

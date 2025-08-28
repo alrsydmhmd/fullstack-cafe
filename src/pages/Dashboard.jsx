@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
-// import DashboardHeader from "../components/DashboardHeader";
+import DashboardHeader from "../components/DashboardHeader";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 export default function Dashboard() {
@@ -38,7 +38,7 @@ export default function Dashboard() {
     <div className="flex min-h-screen bg-gray-900">
       <Sidebar />
       <section className="flex-1 p-6">
-        {/* <DashboardHeader /> */}
+        <DashboardHeader />
         <div className="grid gap-6 md:grid-cols-4 mb-6">
           <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
             <p className="text-orange-400 text-xl font-bold"><br /><br /></p>

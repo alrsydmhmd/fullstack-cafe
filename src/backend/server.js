@@ -7,6 +7,7 @@ import transaksiRoutes from "./routes/transaksiRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import auth from "./routes/auth.js";
+import menuRoutes from "./routes/menuRoutes.js"
 
 const app = express();
 const port = 5000;
@@ -23,6 +24,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/auth", auth);
 app.use("/api/auth/login", auth);
 app.use("/api/auth/signup", auth);
+app.use("/api/menu", menuRoutes);
 
 // Root route
 app.get("/", (req, res) => {

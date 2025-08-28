@@ -1,4 +1,3 @@
-// src/pages/Transaksi.jsx
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
@@ -7,65 +6,79 @@ import DashboardHeader from "../components/DashboardHeader";
 export default function Transaksi() {
   const [transactions, setTransactions] = useState([]);
 
+  const fetchTransactions = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/transaksi");
+      const data = await res.json();
+      setTransactions(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("salesHistory")) || [];
-    setTransactions(data);
+    fetchTransactions();
   }, []);
 
-  const saveTransactions = (data) => {
-    setTransactions(data);
-    localStorage.setItem("salesHistory", JSON.stringify(data));
-  };
-
-  const handleDelete = (index) => {
-    if (window.confirm("Yakin ingin menghapus transaksi ini?")) {
-      const updated = [...transactions];
-      updated.splice(index, 1);
-      saveTransactions(updated);
+  const handleDelete = async (id) => {
+    if (!window.confirm("Yakin ingin menghapus transaksi ini?")) return;
+    try {
+      await fetch(`http://localhost:5000/api/transaksi/${id}`, { method: "DELETE" });
+      setTransactions(transactions.filter((t) => t.id !== id));
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  const handleClearAll = () => {
-    if (window.confirm("Yakin ingin menghapus semua transaksi?")) {
-      localStorage.removeItem("salesHistory");
+  const handleClearAll = async () => {
+    if (!window.confirm("Yakin ingin menghapus semua transaksi?")) return;
+    try {
+      await Promise.all(
+        transactions.map((t) =>
+          fetch(`http://localhost:5000/api/transaksi/${t.id}`, { method: "DELETE" })
+        )
+      );
       setTransactions([]);
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  const handlePay = (index) => {
-    const updated = [...transactions];
-    updated[index].paid = true;
-    saveTransactions(updated);
+  const handlePay = async (id) => {
+    try {
+      await fetch(`http://localhost:5000/api/transaksi/${id}/pay`, { method: "PUT" });
+      setTransactions(
+        transactions.map((t) => (t.id === id ? { ...t, paid: true } : t))
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
     <div className="flex min-h-screen bg-gray-900 text-white">
       <Sidebar />
-
       <div className="flex-1 p-6">
         <DashboardHeader />
 
         <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Data Transaksi</h1>
-            <div className="flex gap-2">
-
-                {/* Link ke Riwayat Pembayaran */}
-                <Link
-                to="/admin/payment"
-                className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded"
-                >
-                Riwayat Pembayaran
-                </Link>
-
-                {transactions.length > 0 && (
-                <button
-                    onClick={handleClearAll}
-                    className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded"
-                >
-                    Hapus Semua
-                </button>
-                )}
-            </div>
+          <h1 className="text-2xl font-bold">Data Transaksi</h1>
+          <div className="flex gap-2">
+            <Link
+              to="/admin/payment"
+              className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded"
+            >
+              Riwayat Pembayaran
+            </Link>
+            {transactions.length > 0 && (
+              <button
+                onClick={handleClearAll}
+                className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded"
+              >
+                Hapus Semua
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg overflow-x-auto">
@@ -86,7 +99,7 @@ export default function Transaksi() {
               {transactions.length > 0 ? (
                 transactions.map((t, i) => (
                   <tr
-                    key={i}
+                    key={t.id}
                     className={`border-b border-gray-700 hover:bg-gray-700 ${
                       t.paid ? "bg-green-700" : ""
                     }`}
@@ -129,14 +142,14 @@ export default function Transaksi() {
                     <td className="px-3 flex gap-2">
                       {!t.paid && (
                         <button
-                          onClick={() => handlePay(i)}
+                          onClick={() => handlePay(t.id)}
                           className="bg-green-600 hover:bg-green-500 px-3 py-1 rounded text-sm"
                         >
                           Bayar
                         </button>
                       )}
                       <button
-                        onClick={() => handleDelete(i)}
+                        onClick={() => handleDelete(t.id)}
                         className="bg-red-600 hover:bg-red-500 px-3 py-1 rounded text-sm"
                       >
                         Hapus

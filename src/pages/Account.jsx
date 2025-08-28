@@ -88,18 +88,27 @@ export default function Account() {
   };
 
   // Hapus akun
-  const handleDelete = async (id) => {
-    if (!window.confirm("Yakin ingin menghapus akun ini?")) return;
-    try {
-      await fetch(`http://localhost:5000/api/auth/${id}`, { method: "DELETE" });
-      const updated = accounts.filter((acc) => acc.id !== id);
-      setAccounts(updated);
-      localStorage.setItem("accounts", JSON.stringify(updated));
-    } catch (err) {
-      console.error(err);
-      alert("Gagal menghapus akun");
+const handleDelete = async (id) => {
+  if (!window.confirm("Yakin ingin menghapus akun ini?")) return;
+
+  try {
+    const res = await fetch(`http://localhost:5000/api/auth/${id}`, { method: "DELETE" });
+    const data = await res.json();
+
+    if (!data.success) {
+      alert(data.message || "Gagal menghapus akun");
+      return;
     }
-  };
+
+    // Update state setelah berhasil hapus
+    const updated = accounts.filter((acc) => acc.id !== id);
+    setAccounts(updated);
+    localStorage.setItem("accounts", JSON.stringify(updated));
+  } catch (err) {
+    console.error(err);
+    alert("Terjadi kesalahan saat menghapus akun");
+  }
+};
 
   // Edit akun — isi form
   const handleEdit = (acc) => {

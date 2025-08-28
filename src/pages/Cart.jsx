@@ -31,7 +31,35 @@ export default function Cart() {
     setCart([]);
   };
 
-  // Hitung total harga
+  // Checkout semua item
+  const handleCheckout = async () => {
+    if (cart.length === 0) return alert("Keranjang kosong!");
+
+    try {
+      await Promise.all(
+        cart.map((item) =>
+          fetch("http://localhost:5000/api/transaksi", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: item.name,
+              price: item.price,
+              quantity: item.quantity,
+            }),
+          })
+        )
+      );
+
+      // Hapus semua cart setelah checkout
+      await clearCart();
+
+      alert("Checkout berhasil!");
+    } catch (err) {
+      console.error(err);
+      alert("Gagal checkout");
+    }
+  };
+
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
@@ -88,7 +116,7 @@ export default function Cart() {
               ))}
             </div>
 
-            {/* Total, Clear Cart & Continue Shopping */}
+            {/* Total, Clear Cart & Checkout */}
             <div className="mt-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
               <h2 className="text-2xl font-bold text-[#f1e0c5]">
                 Total:{" "}
@@ -104,12 +132,12 @@ export default function Cart() {
                 >
                   Hapus Semua
                 </button>
-                <Link
-                  to="/order"
-                  className="bg-[#d7b899] text-[#2e1c15] px-6 py-2 rounded-lg font-semibold hover:bg-[#c8a97e] transition"
+                <button
+                  onClick={handleCheckout}
+                  className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
                 >
-                  Lanjut Belanja
-                </Link>
+                  Checkout
+                </button>
               </div>
             </div>
           </>
