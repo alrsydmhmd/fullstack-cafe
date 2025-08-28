@@ -1,28 +1,27 @@
 import express from "express";
-import db from "../db.js";
-
 const router = express.Router();
 
-// GET all users
-router.get("/", async (req, res) => {
-  const [rows] = await db.query("SELECT * FROM users");
-  res.json(rows);
+// Data sementara (bisa diganti DB nanti)
+let users = [
+  { id: 1, name: "Ali", role: "Kasir", jamMasuk: "08:00", jamKeluar: "16:00", lembur: "2", cuti: "0" }
+];
+
+// GET semua users
+router.get("/", (req, res) => {
+  res.json(users);
 });
 
-// POST add user
-router.post("/", async (req, res) => {
-  const { name, role, jamMasuk, jamKeluar, lembur, cuti } = req.body;
-  const [result] = await db.query(
-    "INSERT INTO users (name, role, jamMasuk, jamKeluar, lembur, cuti) VALUES (?, ?, ?, ?, ?, ?)",
-    [name, role, jamMasuk, jamKeluar, lembur, cuti]
-  );
-  res.json({ id: result.insertId, name, role, jamMasuk, jamKeluar, lembur, cuti });
+// POST tambah user
+router.post("/", (req, res) => {
+  const newUser = { id: Date.now(), ...req.body };
+  users.push(newUser);
+  res.status(201).json(newUser);
 });
 
 // DELETE user
-router.delete("/:id", async (req, res) => {
-  const { id } = req.params;
-  await db.query("DELETE FROM users WHERE id = ?", [id]);
+router.delete("/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  users = users.filter(u => u.id !== id);
   res.json({ message: "User deleted" });
 });
 
